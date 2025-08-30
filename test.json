@@ -1,0 +1,21 @@
+{
+    "aircraft": {
+        "name": "test",
+        "stats": {
+            "Weight": 10000.0,
+            "Thrust": 15000.0,
+            "After Burner Power": 20000.0,
+            "Drag": 2000.0,
+            "Wing Area": 20.0,
+            "Wing Span": 10.0,
+            "Thrust To Weight": 1.0,
+            "CL Slope": 5.7,
+            "CL Max": 1.6,
+            "Alpha Stall": 15.0,
+            "Post-Stall Behaviour": {
+                "Is Capped": false,
+                "Percentage": "0.6"
+            }
+        }
+    }
+}

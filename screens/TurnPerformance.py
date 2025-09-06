@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QLineEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QLineEdit, QComboBox
 import json
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QDoubleValidator
@@ -37,22 +37,21 @@ class TurnPerformance(QWidget):
         self.row1.addWidget(self.title)
         pg.setConfigOption('background','w')
         pg.setConfigOption('foreground','k')
-        self.plotWidget = pg.PlotWidget()
         self.plotLift = pg.PlotWidget(title="Lift Curve")
         self.plotTurn = pg.PlotWidget(title="Turn Performance")
         self.row2.addWidget(self.plotLift)
         self.row2.addWidget(self.plotTurn)
-        
-        self.row3.addWidget(self.plotWidget)
+        self.inputAlt = QLineEdit()
+        self.inputAlt.setPlaceholderText("Enter Altitude (m)...")
+        self.inputAlt.setValidator(QDoubleValidator())
+        self.inputCombo = QComboBox()
+        self.inputCombo.addItems(["m","km","ft","miles"])
         
         self.plot()
-        self.inputTAS = QLineEdit()
-        self.inputTAS.setPlaceholderText("Enter TAS Speed...")
-        self.inputTAS.setValidator(QDoubleValidator())
         self.plotAgain = QPushButton("Plot")
         self.plotAgain.clicked.connect(self.plot)
         
-        self.row4.addWidget(self.inputTAS)
+        self.row4.addWidget(self.inputAlt)
         self.row4.addWidget(self.plotAgain)
         
         self.backButton = QPushButton("Go Back")
@@ -104,7 +103,7 @@ class TurnPerformance(QWidget):
                     return CLMin
     
     """
-    Calculating physics felt by aircraft, uses speeds at kt (will change to be adaptable to user input)
+    Calculating physics felt by aircraft, uses speeds at kt
     """
     
     def atmosphere(self,altM):
@@ -162,14 +161,41 @@ class TurnPerformance(QWidget):
                 
     def plot(self):
         
+        altText = self.inputAlt.text().strip()
+        if altText:
+            altM = float(altText)
+        else:
+            altM = 1000.0
+        
         pref = self.data["aircraft"]["stats"]
         CLMax = pref["CL Max"]
-        wingArea = pref["Wing Area"]
-        wingSpan = pref["Wing Span"]
-        weight = pref["Weight"]
-        thrust = pref["Thrust"]
-        drag = pref["Drag"]
-        altM = 3000
+        wingArea = pref["Wing Area"]["value"]
+        
+        if pref["Wing Area"]["unit"] == "ft\u00b2":
+            wingArea = wingArea * 0.092903
+        
+        wingSpan = pref["Wing Span"]["value"]
+        
+        if pref["Wing Span"]["unit"] == "ft":
+            wingSpan = wingSpan * 0.3048
+        
+        weight = pref["Weight"]["value"]
+        conversions = {
+            "kg":9.80665,
+            "t":1000 * 9.80665,
+            "lb":4.448,
+        }
+        factor = conversions.get(pref["Weight"]["unit"],1)
+        weight = weight * factor
+        
+        thrust = pref["Thrust"]["value"]
+        conversions = {
+            "lbf": 4.44822,
+            "kgf": 9.80665,
+            "kN": 1000,
+        }
+        factor = conversions.get(pref["Thrust"]["unit"],1)
+        thrust = thrust * factor
         machVals = np.linspace(0.2,1.5,100)
         
         turnRatesInstant = []
@@ -197,12 +223,15 @@ class TurnPerformance(QWidget):
         
         CLs = [self.liftCurve(a) for a in alphas]
         
-        self.plotWidget.plotItem.clear()
-        self.plotWidget.plotItem.plot(alphas,CLs,pen=pg.mkPen('r',width=2))
+        self.plotLift.plotItem.clear()
+        self.plotLift.plotItem.setLabel("bottom","Angle of Attack",units="deg")
+        self.plotLift.plotItem.setLabel("left","CL",units="")
+        self.plotLift.plotItem.plot(alphas,CLs,pen=pg.mkPen('r',width=2))
         
+        self.plotTurn.plotItem.setLabel("bottom","Mach",units="")
+        self.plotTurn.plotItem.setLabel("left","Turn Rate",units="deg/s")
         self.plotTurn.plotItem.plot(machVals,turnRatesInstant,pen=pg.mkPen('r',width=2),name="Instantaneous")
         self.plotTurn.plotItem.plot(machVals,turnRatesSustainedPS,pen=pg.mkPen('g',width=2),name="Sustained")
-        
 
     # ----- Go back to Home -----
 

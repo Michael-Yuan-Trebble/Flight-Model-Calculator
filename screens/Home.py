@@ -13,6 +13,7 @@ class Home(QWidget):
     createCharacterSignal = pyqtSignal(str)
     createGraphSignal = pyqtSignal(str)
     createAirSpeed = pyqtSignal(str)
+    createThrust = pyqtSignal(str)
     def __init__(self,controller,file):
         super().__init__()
         self.controller = controller
@@ -35,10 +36,15 @@ class Home(QWidget):
         row3 = QHBoxLayout()
         self.button2 = QPushButton("Graph Air")
         self.button2.clicked.connect(self.emitAir)
+        row4 = QHBoxLayout()
+        self.button3 = QPushButton("Graph Thrust")
+        self.button3.clicked.connect(self.emitThrust)
         row2.addWidget(self.button)
         row3.addWidget(self.button2)
+        row4.addWidget(self.button3)
         self.main.addLayout(row2)
         self.main.addLayout(row3)
+        self.main.addLayout(row4)
         
     # ----- Emissions -----
         
@@ -46,6 +52,8 @@ class Home(QWidget):
         self.createGraphSignal.emit(self.file)
     def emitAir(self):
         self.createAirSpeed.emit(self.file)
+    def emitThrust(self):
+        self.createThrust.emit(self.file)
         
     # ----- Start Populating Screen 
         

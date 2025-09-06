@@ -4,6 +4,7 @@ from screens.CreateAircraft import CreateAircraft
 from screens.Home import Home
 from screens.AirSpeedIndicationGraph import AirSpeedIndicationGraph
 from screens.TurnPerformance import TurnPerformance
+from screens.ThrustGraph import ThrustGraph
 
 class NavigationController:
     
@@ -52,6 +53,7 @@ class NavigationController:
         self.homeScreen.createCharacterSignal.connect(self.goToCreateCharacter)
         self.homeScreen.createGraphSignal.connect(self.goToGraph)
         self.homeScreen.createAirSpeed.connect(self.goToAir)
+        self.homeScreen.createThrust.connect(self.goToThrust)
         self.addScreen("home",self.homeScreen)
         self.setCurrent("home")
     
@@ -72,6 +74,12 @@ class NavigationController:
         self.createAir.finished.connect(self.goBack)
         self.addScreen("createAir",self.createAir)
         self.setCurrent("createAir")
+        
+    def goToThrust(self,filePath=None):
+        self.createThrust = ThrustGraph(filePath)
+        self.createThrust.finished.connect(self.goBack)
+        self.addScreen("createThrust",self.createThrust)
+        self.setCurrent("createThrust")
         
     # ----- Go Back to Home -----
         

@@ -92,8 +92,6 @@ class SelectScreen(QWidget):
         if "aircraft" not in self.data:
             self.data["aircraft"] = {}
         
-        aircraftDetails = ["weight","thrust","drag"]
-        
         self.data["aircraft"]["name"] = None
         self.data["aircraft"]["stats"] = {}
         

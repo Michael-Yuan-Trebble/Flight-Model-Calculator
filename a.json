@@ -1,0 +1,36 @@
+{
+    "aircraft": {
+        "name": "fa",
+        "stats": {
+            "Weight": {
+                "value": 10000.0,
+                "unit": "kg"
+            },
+            "Thrust": {
+                "value": 15000.0,
+                "unit": "lbf"
+            },
+            "Afterburner Power": {
+                "value": 20000.0,
+                "unit": "lbf"
+            },
+            "Wing Area": {
+                "value": 20.0,
+                "unit": "m\u00b2"
+            },
+            "Wing Span": {
+                "value": 10.0,
+                "unit": "m"
+            },
+            "Thrust To Weight": 1.0,
+            "CL Slope": 5.7,
+            "CL Max": 1.6,
+            "Alpha Stall": 15.0,
+            "Post-Stall Behaviour": {
+                "Is Capped": false,
+                "Percentage": "0.6"
+            },
+            "Designation": "Fighter"
+        }
+    }
+}

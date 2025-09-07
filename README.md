@@ -18,7 +18,7 @@ This curve shows the lift based on the angle of attack, using values inputted by
 it then can take two routes. Currently, my program handles two states when this is hit, either drop to a certain percentage of the lift or flattens out when max lift is hit. The turn curve shows the instantaneous and sustained turn rates
 of the given aircraft at a given Mach speed, with the red curve being the theoretical maximum turn rate and the green being the sustained where thrust = drag (the speed remains constant). An example of what these curves can look like is below:
 
-![Lift and Turn Performance Graph](Graphs/LiftAndTurnGraph.jpg)
+![Lift and Turn Performance Graph](Graphs/LiftandTurnGraph.jpg)
 
 ### TAS (True Airspeed) vs IAS (Indicated Airspeed)
 This graph illustrates the differences between the True airspeed, the actual speed the aircraft is going, vs the Indicated airspeed, the airspeed when accounting for air pressure. As a plane goes higher up, these two values get further apart, which 
